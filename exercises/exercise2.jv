@@ -6,47 +6,55 @@ pipeline TreesPipeline {
     -> TreesTableInterpreter
     -> TreesSQLiteLoader;
 
+  // 1. Extract CSV data from URL
   block TreesExtractor oftype HttpExtractor {
     url: "https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/stadt-neuss-herbstpflanzung-2023/exports/csv";
   }
 
+  // 2. Convert extracted data to text file
   block TreesTextFileInterpreter oftype TextFileInterpreter { }
 
+  // 3. Interpret text file as CSV format
   block TreesCSVInterpreter oftype CSVInterpreter {
     delimiter: ";";
   }
 
+  // 4. Define table structure with all 6 columns to match the source shape
   block TreesTableInterpreter oftype TableInterpreter {
     header: true;
     columns: [
       "id" oftype Id,                            // Geopoint coordinates with custom type
       "stadtteil" oftype VogelsangStadtteil,     // Stadtteil with custom type
       "baumart_botanisch" oftype text,           // Botanical name of the tree
-      "baumart_deutsch" oftype text,             // Initially included for source shape
       "pflanzjahr" oftype integer                // Planting year
     ];
   }
 
+  // Define custom value type "Id" with RegexConstraint for validation
   valuetype Id oftype text {
     constraints: [
       IdPattern
     ];
   }
 
+  // Constraint for "id" to match the geopoint format
   constraint IdPattern oftype RegexConstraint {
     regex: /^\d{1,3}\.\d+,\s?\d{1,3}\.\d+$/;
   }
 
+  // Define custom value type "VogelsangStadtteil" with RegexConstraint for validation
   valuetype VogelsangStadtteil oftype text {
     constraints: [
-      StadtteilConstraint
+      StadtteilPattern
     ];
   }
 
-  constraint StadtteilConstraint oftype AllowlistConstraint {
-    allowlist: ["Vogelsang"];
+  // Constraint for "stadtteil" to ensure it starts with "Vogelsang"
+  constraint StadtteilPattern oftype RegexConstraint {
+    regex: /^Vogelsang.*$/;
   }
 
+  // 6. Load the structured data into SQLite
   block TreesSQLiteLoader oftype SQLiteLoader {
     table: "trees";
     file: "./trees.sqlite";

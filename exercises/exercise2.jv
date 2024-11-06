@@ -1,6 +1,5 @@
 pipeline TreesPipeline {
 
-  // Define the structure of the pipeline
   TreesExtractor
     -> TreesTextFileInterpreter
     -> TreesCSVInterpreter
@@ -20,10 +19,11 @@ pipeline TreesPipeline {
   block TreesTableInterpreter oftype TableInterpreter {
     header: true;
     columns: [
-      "id" oftype Id,                              // Geopoint coordinates with custom type
-      "stadtteil" oftype VogelsangStadtteil,       // Stadtteil with custom type
-      "baumart_botanisch" oftype text,             // Botanical name of the tree
-      "pflanzjahr" oftype integer                  // Planting year
+      "id" oftype Id,                            // Geopoint coordinates with custom type
+      "stadtteil" oftype VogelsangStadtteil,     // Stadtteil with custom type
+      "baumart_botanisch" oftype text,           // Botanical name of the tree
+      "baumart_deutsch" oftype text,             // Initially included for source shape
+      "pflanzjahr" oftype integer                // Planting year
     ];
   }
 

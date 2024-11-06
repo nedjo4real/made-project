@@ -1,34 +1,59 @@
+// SPDX-FileCopyrightText: 2023 Friedrich-Alexander-Universitat Erlangen-Nurnberg
+//
+// SPDX-License-Identifier: AGPL-3.0-only
+
+// Exercise 2: Trees
+// Goal: Build an automated pipeline to load and filter tree planting data 
+// from a URL and store valid data related to "Vogelsang" in a SQLite database.
+
 pipeline TreesPipeline {
 
+  // Define the structure of the pipeline
   TreesExtractor
     -> TreesTextFileInterpreter
     -> TreesCSVInterpreter
     -> TreesTableInterpreter
     -> TreesSQLiteLoader;
 
-
+  // 1. Extract the CSV data directly from the provided URL.
   block TreesExtractor oftype HttpExtractor {
     url: "https://opendata.rhein-kreis-neuss.de/api/v2/catalog/datasets/stadt-neuss-herbstpflanzung-2023/exports/csv";
   }
 
+  // 2. Convert the extracted file into a TextFile.
   block TreesTextFileInterpreter oftype TextFileInterpreter { }
 
+  // 3. Interpret the text file as CSV format.
   block TreesCSVInterpreter oftype CSVInterpreter {
     delimiter: ";";
   }
 
+  // 4. Define the table structure and constraints using separate constraint blocks.
   block TreesTableInterpreter oftype TableInterpreter {
     header: true;
     columns: [
-      "id" oftype text,               // Geopoint coordinates stored as TEXT
-      "stadtteil" oftype text,        // Stadtteil stored as TEXT
-      "baumart_botanisch" oftype text,// Botanical name of the tree
-      "pflanzjahr" oftype integer     // Planting year
+      "id" oftype Id,                         // Geopoint coordinates
+      "stadtteil" oftype text,                  // Stadtteil, only include "Vogelsang"
+      "baumart_botanisch" oftype text,          // Botanical name of the tree
+      "pflanzjahr" oftype integer               // Planting year
     ];
   }
 
+  valuetype Id oftype text {
+    constraints:[
+      IdPattern
+    ];
+  }
+
+  // Constraint for "id" to match the geopoint format.
+  constraint IdPattern oftype RegexConstraint {
+    regex: /^\d{1,3}\.\d+,\s?\d{1,3}\.\d+$/;
+  }
+
+  // 5. Load the structured data into a SQLite database, specifying the table and file location.
   block TreesSQLiteLoader oftype SQLiteLoader {
     table: "trees";
     file: "./trees.sqlite";
   }
 }
+

@@ -67,7 +67,7 @@ This project analyzes the relationship between education levels and income acros
   1. Store the combined and cleaned dataset as a CSV file in the `/data` directory.
   2. Ensure proper documentation of the dataset schema.
 
-### WP 6: Example Analysis (Optional)
+### WP 6: Data Analysis 
 - **Goal:** Perform exploratory and statistical analysis to validate the dataset.
 - **Tasks:**
   1. Visualize income levels and education distributions.
@@ -79,12 +79,12 @@ This project analyzes the relationship between education levels and income acros
 ## Work Packages with Issues
 
 ### Linked Issues:
-1. [Data Exploration](https://github.com/<your-repo>/issues/1)
-2. [Data Cleaning](https://github.com/<your-repo>/issues/2)
-3. [Data Integration](https://github.com/<your-repo>/issues/3)
-4. [Data Transformation](https://github.com/<your-repo>/issues/4)
-5. [Data Storage](https://github.com/<your-repo>/issues/5)
-6. [Example Analysis (Optional)](https://github.com/<your-repo>/issues/6)
+1. [Data Exploration](https://github.com/nedjo4real/made-project/issues/1)
+2. [Data Cleaning](https://github.com/nedjo4real/made-project/issues/2)
+3. [Data Integration](https://github.com/nedjo4real/made-project/issues/3)
+4. [Data Transformation](https://github.com/nedjo4real/made-project/issues/4)
+5. [Data Storage](https://github.com/nedjo4real/made-project/issues/5)
+6. [Data Analysis](https://github.com/nedjo4real/made-project/issues/6)
 
 ---
 

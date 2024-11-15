@@ -10,8 +10,12 @@ pipeline WorldBankDataPipeline {
     sheetName: "Figure S5.1.2";
   }
 
+   block FirstRowDeleter oftype RowDeleter {
+    delete: [row 1];
+  }
+
   block DebugHeaderWriter oftype CellWriter {
-    at: range P2:S2;
+    at: range P1:S1;
     write: [
       "Country Code",
       "Economy",
@@ -20,12 +24,41 @@ pipeline WorldBankDataPipeline {
     ];
   }
 
-  block WorldBankTableInterpreter oftype TableInterpreter {
-    header: false;
+  block GDPPerCapitaInterpreter oftype TableInterpreter {
+    header: true;
     columns: [
       "Country Code" oftype CountryCode,
-      "Economy" oftype text,
-      "GDP per Capita" oftype GDPPerCapita,
+      "GDP per Capita" oftype GDPPerCapita
+    ];
+  }
+
+  block WorldBankExtractor2 oftype HttpExtractor {
+    url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
+  }
+
+  block WorldBankExcelInterpreter2 oftype XLSXInterpreter { }
+
+  block FigureS5SheetPicker2 oftype SheetPicker {
+    sheetName: "Figure S5.1.2";
+  }
+
+  block FirstRowDeleter2 oftype RowDeleter {
+    delete: [row 1];
+  }
+
+  block DebugHeaderWriter2 oftype CellWriter {
+    at: range P1:S1;
+    write: [
+      "Country Code",
+      "Economy",
+      "GDP per Capita",
+      "Bond Issuance Share"
+    ];
+  }
+  block BondIssuanceInterpreter oftype TableInterpreter {
+    header: true;
+    columns: [
+      "Country Code" oftype CountryCode,
       "Bond Issuance Share" oftype BondIssuanceShare
     ];
   }
@@ -61,23 +94,33 @@ pipeline WorldBankDataPipeline {
     upperBound: 1.0;
   }
 
-  block GDPPerCapitaLoader oftype SQLiteLoader {
-    table: "gdpPerCapita";
+  block BondIssuanceLoader oftype SQLiteLoader {
+    table: "bondIssuance";
     file: "./country-stats.sqlite";
   }
 
-  block BondIssuanceLoader oftype SQLiteLoader {
-    table: "bondIssuance";
+  block GDPPerCapitaLoader oftype SQLiteLoader {
+    table: "gdpPerCapita";
     file: "./country-stats.sqlite";
   }
 
   WorldBankExtractor
     -> WorldBankExcelInterpreter
     -> FigureS5SheetPicker
+    -> FirstRowDeleter
     -> DebugHeaderWriter
-    -> WorldBankTableInterpreter
-    -> GDPPerCapitaLoader;
+    -> BondIssuanceInterpreter;
 
-  WorldBankTableInterpreter
+  BondIssuanceInterpreter
     -> BondIssuanceLoader;
+
+  WorldBankExtractor2
+    -> WorldBankExcelInterpreter2
+    -> FigureS5SheetPicker2
+    -> FirstRowDeleter2
+    -> DebugHeaderWriter2
+    -> GDPPerCapitaInterpreter;
+
+  GDPPerCapitaInterpreter
+    -> GDPPerCapitaLoader;
 }

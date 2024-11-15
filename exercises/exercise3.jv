@@ -67,7 +67,7 @@ pipeline WorldBankDataPipeline {
   }
 
   block BondIssuanceLoader oftype SQLiteLoader {
-    table: "BondIssuance";
+    table: "bondIssuance";
     file: "./country-stats.sqlite";
   }
 

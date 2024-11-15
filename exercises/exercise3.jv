@@ -1,0 +1,83 @@
+pipeline WorldBankDataPipeline {
+
+  block WorldBankExtractor oftype HttpExtractor {
+    url: "https://thedocs.worldbank.org/en/doc/7d852628d96b9411d43e5d36d5dff941-0050062022/original/Graphs-Chapter-5-02082022.xlsx";
+  }
+
+  block WorldBankExcelInterpreter oftype XLSXInterpreter { }
+
+  block FigureS5SheetPicker oftype SheetPicker {
+    sheetName: "Figure S5.1.2";
+  }
+
+  block DebugHeaderWriter oftype CellWriter {
+    at: range P2:S2;
+    write: [
+      "Country Code",
+      "Economy",
+      "GDP per Capita",
+      "Bond Issuance Share"
+    ];
+  }
+
+  block WorldBankTableInterpreter oftype TableInterpreter {
+    header: false;
+    columns: [
+      "Country Code" oftype CountryCode,
+      "Economy" oftype text,
+      "GDP per Capita" oftype GDPPerCapita,
+      "Bond Issuance Share" oftype BondIssuanceShare
+    ];
+  }
+
+  valuetype CountryCode oftype text {
+    constraints: [
+      CountryCodePattern
+    ];
+  }
+
+  constraint CountryCodePattern oftype RegexConstraint {
+    regex: /^[A-Z]{3}$/;
+  }
+
+  valuetype GDPPerCapita oftype decimal {
+    constraints: [
+      PositiveDecimalConstraint
+    ];
+  }
+
+  constraint PositiveDecimalConstraint oftype RangeConstraint {
+    lowerBound: 0.01;
+  }
+
+  valuetype BondIssuanceShare oftype decimal {
+    constraints: [
+      BondIssuanceRangeConstraint
+    ];
+  }
+
+  constraint BondIssuanceRangeConstraint oftype RangeConstraint {
+    lowerBound: 0.0;
+    upperBound: 1.0;
+  }
+
+  block GDPPerCapitaLoader oftype SQLiteLoader {
+    table: "GDPPerCapita";
+    file: "./country-stats.sqlite";
+  }
+
+  block BondIssuanceLoader oftype SQLiteLoader {
+    table: "BondIssuance";
+    file: "./country-stats.sqlite";
+  }
+
+  WorldBankExtractor
+    -> WorldBankExcelInterpreter
+    -> FigureS5SheetPicker
+    -> DebugHeaderWriter
+    -> WorldBankTableInterpreter
+    -> GDPPerCapitaLoader;
+
+  WorldBankTableInterpreter
+    -> BondIssuanceLoader;
+}

@@ -62,7 +62,7 @@ pipeline WorldBankDataPipeline {
   }
 
   block GDPPerCapitaLoader oftype SQLiteLoader {
-    table: "GDPPerCapita";
+    table: "gdpPerCapita";
     file: "./country-stats.sqlite";
   }
 

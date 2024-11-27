@@ -1,7 +1,7 @@
-# Project Plan: Factors Influencing Income Levels and Educational Attainment in the Americas
+# Project Plan: Does a Higher Academic Degree Guarantee Higher Income?
 
 ## Overview
-This project analyzes the relationship between education levels and income across the Americas. By integrating demographic data from the American Citizen Income dataset (Kaggle) with country-level education statistics (World Bank), we aim to identify trends and predictors for income levels based on education and related factors. The project will culminate in a cleaned and integrated dataset for further exploratory and statistical analysis.
+This project analyzes the relationship between education levels and income across the Americas. By integrating demographic data from the American Citizen Income dataset and the Global Salary Dataset 2022 both from Kaggle, we aim to identify trends and predictors for income levels based on education and related factors. The project will culminate in a cleaned and integrated dataset for further exploratory and statistical analysis.
 
 ---
 
@@ -23,11 +23,11 @@ This project analyzes the relationship between education levels and income acros
 * Data Type: CSV
 * Description: Contains information on income levels, demographics (e.g., age, gender, state), and other related features.
 
-### Dataset 2: World Bank Education Statistics
-* Metadata URL: [World Bank Education Data](https://data.worldbank.org/indicator/SE.ADT.LITR.ZS) 
-* Data URL: https://api.worldbank.org/v2/en/indicator/SE.ADT.LITR.ZS?downloadformat=excel
-* Data Type: Excel
-* Description: Provides country-level indicators on literacy rates, average years of schooling, and other education metrics.
+### Dataset 2: Global Salary DataSet 2022
+* Metadata URL: [Kaggle: Global Salary DataSet 2022](https://www.kaggle.com/datasets/ricardoaugas/salary-transparency-dataset-2022) 
+* Data URL: https://www.kaggle.com/datasets/ricardoaugas/salary-transparency-dataset-2022
+* Data Type: CSV
+* Description: This dataset provides a comprehensive overview of salaries across various countries, offering valuable insights into salary and education levels.
 
 ---
 

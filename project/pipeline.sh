@@ -1,2 +1,5 @@
 #!/bin/bash
-python3 /project/pipeline.py
+echo "Starting pipeline"
+python3 ./project/pipeline.py
+echo "Pipeline finished"
+read -p "Press Enter to exit..."

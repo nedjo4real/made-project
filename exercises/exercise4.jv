@@ -46,6 +46,12 @@ pipeline TemperaturePipeline {
         ];
     }
 
+    transform CelciusToFahrenheit {
+        from Celsius oftype decimal;
+        to Fahrenheit oftype decimal;
+        Fahrenheit: (Celsius * 1.8) + 32;
+    }
+
     block temperatureCelciusToFahrenheit oftype TableTransformer {
         inputColumns: ["temperature"];
         outputColumn: "temperature";
@@ -56,12 +62,6 @@ pipeline TemperaturePipeline {
         inputColumns: ["battery_temperature"];
         outputColumn: "battery_temperature";
         uses: CelciusToFahrenheit;  // Fahrenheit = (Celsius * 9/5) + 32
-    }
-
-    transform CelciusToFahrenheit {
-        from Celsius oftype decimal;
-        to Fahrenheit oftype decimal;
-        Fahrenheit: (Celsius * 9/5) + 32;
     }
 
     valuetype Id oftype integer {

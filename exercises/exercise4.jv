@@ -6,6 +6,7 @@ pipeline TemperaturePipeline {
         -> TextFileInterpreter
         -> CSVInterpreter
         -> RenameColumns
+        -> battery_temperatureHeader
         -> TableInterpreter
         -> temperatureCelciusToFahrenheit
         -> battery_temperatureCelciusToFahrenheit
@@ -30,8 +31,13 @@ pipeline TemperaturePipeline {
     }
 
     block RenameColumns oftype CellWriter {
-        at: range A1:F1;
-        write: ["id", "producer", "model", "month", "temperature", "battery_temperature"];
+        at: range A1:E1;
+        write: ["id", "producer", "model", "month", "temperature"];
+    }
+
+    block battery_temperatureHeader oftype CellWriter {
+        at: cell J1;
+        write:["battery_temperature"];
     }
 
     block TableInterpreter oftype TableInterpreter {
@@ -44,6 +50,12 @@ pipeline TemperaturePipeline {
             "temperature" oftype decimal,
             "battery_temperature" oftype decimal
         ];
+    }
+
+    transform CelciusToFahrenheit2 {
+        from Celsius oftype decimal;
+        to Fahrenheit oftype decimal;
+        Fahrenheit: (Celsius * 1.8) + 32;
     }
 
     transform CelciusToFahrenheit {
@@ -61,7 +73,7 @@ pipeline TemperaturePipeline {
     block battery_temperatureCelciusToFahrenheit oftype TableTransformer {
         inputColumns: ["battery_temperature"];
         outputColumn: "battery_temperature";
-        uses: CelciusToFahrenheit;  // Fahrenheit = (Celsius * 9/5) + 32
+        uses: CelciusToFahrenheit2;  // Fahrenheit = (Celsius * 9/5) + 32
     }
 
     valuetype Id oftype integer {

@@ -1,0 +1,78 @@
+pipeline TemperaturePipeline {
+
+    DataDownloader
+        -> ArchiveInterpreter
+        -> FilePicker
+        -> TextFileInterpreter
+        -> CSVInterpreter
+        -> RenameColumns
+        -> TableInterpreter
+        -> temperatureCelciusToFahrenheit
+        -> battery_temperatureCelciusToFahrenheit
+        -> tempLoader;
+
+    block DataDownloader oftype HttpExtractor {
+        url: "https://www.mowesta.com/data/measure/mowesta-dataset-20221107.zip";
+    }
+
+    block ArchiveInterpreter oftype ArchiveInterpreter {
+        archiveType: "zip";
+    }
+
+    block FilePicker oftype FilePicker {
+        path: '/data.csv';
+    }
+
+    block TextFileInterpreter oftype TextFileInterpreter { }
+
+    block CSVInterpreter oftype CSVInterpreter {
+        delimiter: ";";
+    }
+
+    block RenameColumns oftype CellWriter {
+        at: range A1:F1;
+        write: ["id", "producer", "model", "month", "temperature", "battery_temperature"];
+    }
+
+    block TableInterpreter oftype TableInterpreter {
+        header: true;
+        columns: [
+            "id" oftype Id,
+            "producer" oftype text,
+            "model" oftype text,
+            "month" oftype text,
+            "temperature" oftype decimal,
+            "battery_temperature" oftype decimal
+        ];
+    }
+
+    block temperatureCelciusToFahrenheit oftype TableTransformer {
+        inputColumns: ["temperature"];
+        outputColumn: "temperature";
+        uses: CelciusToFahrenheit;  // Fahrenheit = (Celsius * 9/5) + 32
+    }
+
+    block battery_temperatureCelciusToFahrenheit oftype TableTransformer {
+        inputColumns: ["battery_temperature"];
+        outputColumn: "battery_temperature";
+        uses: CelciusToFahrenheit;  // Fahrenheit = (Celsius * 9/5) + 32
+    }
+
+    transform CelciusToFahrenheit {
+        from Celsius oftype decimal;
+        to Fahrenheit oftype decimal;
+        Fahrenheit: (Celsius * 9/5) + 32;
+    }
+
+    valuetype Id oftype integer {
+        constraints: [IdConstraint];
+    }
+    
+    constraint IdConstraint on integer:
+        value >= 0;
+
+    block tempLoader oftype SQLiteLoader {
+        table: "temperatures";
+        file: "./temperatures.sqlite";
+    }
+}

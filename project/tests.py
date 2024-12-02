@@ -7,9 +7,7 @@ import pandas as pd
 class TestPipeline(unittest.TestCase):
     def setUp(self):
         # Paths to datasets and database
-        self.db_path = './data/data.sqlite'
-        self.dataset1_url = "https://www.kaggle.com/datasets/amirhosseinmirzaie/americancitizenincome"
-        self.dataset2_url = "https://www.kaggle.com/datasets/ricardoaugas/salary-transparency-dataset-2022"
+        self.db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'data.sqlite'))
 
     def test_pipeline_execution(self):
         """Test if the pipeline creates the SQLite database."""
@@ -28,21 +26,41 @@ class TestPipeline(unittest.TestCase):
             tables = cursor.fetchall()
             self.assertIn(('income_data',), tables, "Table 'income_data' is missing.")
 
-    def test_data_quality(self):
-        """Test data quality: no missing values and proper salary ranges."""
+    def test_salary_categories(self):
+        """Test if Salary column contains only expected categories."""
         if not os.path.exists(self.db_path):
             self.fail("Database file does not exist.")
-        
+
         with sqlite3.connect(self.db_path) as conn:
             df = pd.read_sql("SELECT * FROM income_data", conn)
 
-            # Test for missing values
-            self.assertFalse(df.isna().any().any(), "Data contains missing values.")
+            expected_categories = {'>50K', '>=50K', '<50K', '<=50K'}
+            actual_categories = set(df['Salary'].unique())
+            self.assertEqual(expected_categories, actual_categories,
+                             f"Salary column has unexpected categories: {actual_categories}")
 
-            # Test for salary range values
-            self.assertTrue(set(df['Salary'].unique()).issubset({'>=50K', '<50K'}),
-                        "Salary column contains unexpected values.")
+    def test_no_missing_age_range(self):
+        """Test that Age.Range column has no missing values."""
+        if not os.path.exists(self.db_path):
+            self.fail("Database file does not exist.")
 
+        with sqlite3.connect(self.db_path) as conn:
+            df = pd.read_sql("SELECT * FROM income_data", conn)
+
+            self.assertFalse(df['Age.Range'].isna().any(),
+                             "Age.Range column contains missing values.")
+
+    def test_country_column_validity(self):
+        """Test that the Country column contains only valid entries."""
+        if not os.path.exists(self.db_path):
+            self.fail("Database file does not exist.")
+
+        with sqlite3.connect(self.db_path) as conn:
+            df = pd.read_sql("SELECT * FROM income_data", conn)
+
+            invalid_countries = df['Country'].apply(lambda x: not isinstance(x, str) or x.isdigit()).any()
+            self.assertFalse(invalid_countries,
+                             "Country column contains invalid entries.")
 
     def test_combined_data(self):
         """Test if the combined data has reasonable size and structure."""

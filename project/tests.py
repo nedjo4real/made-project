@@ -8,7 +8,7 @@ class TestPipeline(unittest.TestCase):
     def setUp(self):
         # Paths to datasets and database
         self.db_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data', 'data.sqlite'))
-        print("db_path => "+self.db_path)
+        # print("db_path => "+self.db_path)
 
     def test_pipeline_execution(self):
         """Test if the pipeline creates the SQLite database."""

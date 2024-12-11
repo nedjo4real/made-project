@@ -19,7 +19,7 @@ jobs:
       - name: Make pipeline executable
         run: chmod +x project/pipeline.sh
         
-      - name: Run the pipelina
+      - name: Run the pipeline
         run: ./project/pipeline.sh
 
       - name: Make tests.sh executable

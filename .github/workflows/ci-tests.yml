@@ -16,6 +16,12 @@ jobs:
       - name: Install dependencies
         run: pip install pandas numpy kagglehub
 
+      - name: Make pipeline executable
+        run: chmod +x project/pipeline.sh
+        
+      - name: Run the pipelina
+        run: ./project/pipeline.sh
+
       - name: Make tests.sh executable
         run: chmod +x project/tests.sh
 

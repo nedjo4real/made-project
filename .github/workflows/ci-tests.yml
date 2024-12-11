@@ -13,22 +13,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.9'
-
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-
       - name: Make tests.sh executable
         run: chmod +x tests.sh
 
       - name: Run tests
-        run: ./tests.sh || exit 1  # Exit with 1 if tests fail to ensure the workflow fails.
-
-      - name: Debug logs (if needed)
-        run: |
-          echo "Debugging logs:"
-          cat logs/output.log  # Example debug log if your tests generate logs.
+        run: ./tests.sh || exit 1

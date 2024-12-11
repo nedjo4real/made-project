@@ -17,4 +17,4 @@ jobs:
         run: chmod +x tests.sh
 
       - name: Run tests
-        run: ./tests.sh || exit 1
+        run: ./project/tests.sh || exit 1

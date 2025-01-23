@@ -1,37 +1,86 @@
-# Methods of Advanced Data Engineering Template Project
+# Does Having a Higher Academic Degree Mean More Money?
 
-This template project provides some structure for your open data project in the MADE module at FAU.
-This repository contains (a) a data science project that is developed by the student over the course of the semester, and (b) the exercises that are submitted over the course of the semester.
+This repository contains the data, analysis, and results of a project exploring the relationship between academic qualifications and income levels. The work was developed as part of the Methods of Advanced Data Engineering (MADE) course at Friedrich-Alexander-Universität Erlangen-Nürnberg (FAU).
 
-To get started, please follow these steps:
-1. Create your own fork of this repository. Feel free to rename the repository right after creation, before you let the teaching instructors know your repository URL. **Do not rename the repository during the semester**.
+---
 
-## Project Work
-Your data engineering project will run alongside lectures during the semester. We will ask you to regularly submit project work as milestones, so you can reasonably pace your work. All project work submissions **must** be placed in the `project` folder.
+## Table of Contents
+1. [Introduction](#introduction)
+2. [Data Sources](#data-sources)
+3. [Tools and Technologies](#tools-and-technologies)
+4. [Methodology](#methodology)
+5. [Results](#results)
+6. [How to Run the Project](#how-to-run-the-project)
+7. [License](#license)
 
-### Exporting a Jupyter Notebook
-Jupyter Notebooks can be exported using `nbconvert` (`pip install nbconvert`). For example, to export the example notebook to HTML: `jupyter nbconvert --to html examples/final-report-example.ipynb --embed-images --output final-report.html`
+---
 
+## Introduction
+The goal of this project is to determine whether higher academic qualifications correlate with higher income. By analyzing open datasets, the project seeks to provide evidence-based insights into the financial benefits of advanced degrees.
 
-## Exercises
-During the semester you will need to complete exercises using [Jayvee](https://github.com/jvalue/jayvee). You **must** place your submission in the `exercises` folder in your repository and name them according to their number from one to five: `exercise<number from 1-5>.jv`.
+---
 
-In regular intervals, exercises will be given as homework to complete during the semester. Details and deadlines will be discussed in the lecture, also see the [course schedule](https://made.uni1.de/).
+## Data Sources
+The data used in this project comes from publicly available open datasets. These datasets were cleaned, transformed, and analyzed as part of the project workflow. Specific details about the datasets are provided in the `project/data` directory.
 
-### Exercise Feedback
-We provide automated exercise feedback using a GitHub action (that is defined in `.github/workflows/exercise-feedback.yml`). 
+---
 
-To view your exercise feedback, navigate to Actions → Exercise Feedback in your repository.
+## Tools and Technologies
+The following tools and technologies were utilized:
+- **Programming Language**: Python
+- **Libraries**:
+  - pandas: Data manipulation and analysis
+  - NumPy: Numerical computations
+  - Matplotlib & Seaborn: Data visualization
+- **Other Tools**:
+  - Jupyter Notebooks: Interactive code and visualization
+  - GitHub: Version control
+  - GitHub Actions: Continuous integration for automation
 
-The exercise feedback is executed whenever you make a change in files in the `exercise` folder and push your local changes to the repository on GitHub. To see the feedback, open the latest GitHub Action run, open the `exercise-feedback` job and `Exercise Feedback` step. You should see command line output that contains output like this:
+---
 
-```sh
-Found exercises/exercise1.jv, executing model...
-Found output file airports.sqlite, grading...
-Grading Exercise 1
-	Overall points 17 of 17
-	---
-	By category:
-		Shape: 4 of 4
-		Types: 13 of 13
-```
+## Methodology
+The project followed these steps:
+1. **Data Collection**: Open datasets were sourced and downloaded.
+2. **Data Cleaning**: Inconsistent and missing values were handled to ensure data quality.
+3. **Exploratory Data Analysis (EDA)**: Key insights were drawn using visualizations and descriptive statistics.
+4. **Statistical Analysis**: Regression and other methods were applied to evaluate correlations.
+5. **Results Interpretation**: Findings were summarized in the context of academic qualifications and income.
+
+---
+
+## Results
+Key findings of the analysis are summarized below:
+- Higher degrees generally correlate with increased income.
+- Exceptions exist in specific fields where experience outweighs academic qualifications.
+- Detailed insights are available in the `project/` directory.
+
+---
+
+## How to Run the Project
+To replicate the analysis:
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/nedjo4real/made-project.git
+    ```
+2. Navigate to the project directory:
+    ```bash
+    cd made-project
+    ```
+3. Install the required dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+4. Run the analysis script or open the Jupyter notebook in the `project/` directory.
+
+---
+
+## License
+This project is licensed under the [Creative Commons Attribution 4.0 International License](https://creativecommons.org/licenses/by/4.0/).
+
+---
+
+## Acknowledgments
+This work was completed as part of the MADE course at FAU. Special thanks to course instructors and peers for their support and feedback.
+
+---
